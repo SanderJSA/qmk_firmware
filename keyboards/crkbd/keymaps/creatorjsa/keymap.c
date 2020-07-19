@@ -13,18 +13,15 @@ extern uint8_t is_master;
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
-#define _QWERTY 0
-#define _LOWER 1
-#define _RAISE 2
-#define _SHIFT 3
-#define _ADJUST 4
+#define _COLEMAK 0
+#define _QWERTY 1
+#define _LOWER 2
+#define _RAISE 3
+#define _SHIFT 4
+#define _ADJUST 5
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE,
-  ADJUST,
-  BACKLIT,
+  SWAP_DL = SAFE_RANGE,
   RGBRST
 };
 
@@ -33,7 +30,7 @@ enum macro_keycodes {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = LAYOUT( \
+  [_COLEMAK] = LAYOUT( \
   //,--------------------------------------------------------------------------.                     ,---------------------------------------------------------------------------------.
       KC_ESC               , FR_Q , FR_W , FR_F , FR_P            , FR_B       ,                             FR_J ,            FR_L ,    FR_U ,   FR_Y , FR_SCLN ,              KC_ENT ,\
   //|----------------------+------+------+------+-----------------+------------|                     |------------+-----------------+---------+--------+---------+---------------------|
@@ -52,9 +49,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|---------+---------+---------+---------+---------+---------|                      |---------+---------+---------+---------+----------+---------|
       _______ , FR_EXLM , FR_AT   , FR_HASH , FR_DLR  , FR_PERC ,                        FR_CIRC , FR_AMPR , FR_ASTR , FR_LBRC ,  FR_RBRC ,  KC_DEL ,\
   //|---------+---------+---------+---------+---------+---------|                      |---------+---------+---------+---------+----------+---------|
-      _______ , FR_EURO , FR_EACU , FR_EGRV , FR_AGRV , FR_CCED ,                         KC_GRV , KC_LEFT , KC_DOWN ,   KC_UP , KC_RIGHT , _______ ,\
+      _______ , FR_EURO , FR_EACU , FR_EGRV , FR_AGRV , FR_CCED ,                         FR_GRV , KC_LEFT , KC_DOWN ,   KC_UP , KC_RIGHT , _______ ,\
   //|---------+---------+---------+---------+---------+---------+---------|  |---------+---------+---------+---------+---------+----------+---------|
-                                              _______ , _______ , _______ ,    _______ , _______ , _______ \
+                                              _______ , _______ , _______ ,    _______ , TG(_QWERTY) , _______ \
                                           //`-----------------------------'  `-----------------------------'
     ),
 
@@ -64,15 +61,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|---------+--------------+---------+---------+---------+---------|                      |---------+------------+------------+---------+------------+---------|
       _______ , KC_MUTE      , XXXXXXX , KC_PGUP , KC_VOLU , KC_F12  ,                        KC_PSCR , LCTL(FR_A) , LCTL(FR_E) , FR_LCBR ,    FR_RCBR ,  KC_DEL ,\
   //|---------+--------------+---------+---------+---------+---------|                      |---------+------------+------------+---------+------------+---------|
-      _______ , OSL(_ADJUST) , XXXXXXX , KC_PGDN , KC_VOLD , KC_F11  ,                        KC_TILD ,    KC_LEFT ,    KC_DOWN ,   KC_UP ,   KC_RIGHT , _______ ,\
+      _______ , OSL(_ADJUST) , XXXXXXX , KC_PGDN , KC_VOLD , KC_F11  ,                        FR_TILD ,    KC_LEFT ,    KC_DOWN ,   KC_UP ,   KC_RIGHT , _______ ,\
   //|---------+--------------+---------+---------+---------+---------+---------|  |---------+---------+------------+------------+---------+------------+---------|
-                                                   _______ , _______ , _______ ,    _______ , _______ ,    _______ \
+                                                   _______ , TG(_QWERTY) , _______ ,    _______ , _______ ,    _______ \
                                                //`-----------------------------'  `--------------------------------'
   ),
 
   [_SHIFT] = LAYOUT( \
   //,-----------------------------------------------------------.                      ,-----------------------------------------------------------------------.
-      _______ , S(FR_Q) , S(FR_W) , S(FR_F) , S(FR_P) , S(FR_B) ,                        S(FR_J) , S(FR_L) , S(FR_U) , S(FR_Y) , FR_COLN ,            _______  ,\
+      _______ , S(FR_Q) , S(FR_W) , S(FR_F) , S(FR_P) , S(FR_B) ,                        S(FR_J) , S(FR_L) , S(FR_U) , S(FR_Y) , FR_COLN ,           S(KC_ENT) ,\
   //|---------+---------+---------+---------+---------+---------|                      |---------+---------+---------+---------+---------+---------------------|
       _______ , S(FR_A) , S(FR_R) , S(FR_S) , S(FR_T) , S(FR_G) ,                        S(FR_M) , S(FR_N) , S(FR_E) , S(FR_I) , S(FR_O) , LT(_SHIFT, FR_DQUO) ,\
   //|---------+---------+---------+---------+---------+---------|                      |---------+---------+---------+---------+---------+---------------------|
@@ -83,33 +80,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ADJUST] = LAYOUT( \
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        RESET,  RGBRST, EEP_RST, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         KC_LCTL,   LOWER,  KC_SPC,     KC_BSPC, _______, KC_RALT \
-                                      //`--------------------------'  `--------------------------'
+  //,-----------------------------------------------------------.                      ,-----------------------------------------------------------.
+      RESET   , RGBRST  , EEP_RST , XXXXXXX , XXXXXXX , XXXXXXX ,                        XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX ,\
+  //|---------+---------+---------+---------+---------+---------|                      |---------+---------+---------+---------+---------+---------|
+      RGB_TOG , RGB_HUI , RGB_SAI , RGB_VAI , XXXXXXX , XXXXXXX ,                        XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX ,\
+  //|---------+---------+---------+---------+---------+---------|                      |---------+---------+---------+---------+---------+---------|
+      RGB_MOD , RGB_HUD , RGB_SAD , RGB_VAD , XXXXXXX , XXXXXXX ,                        XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX ,\
+  //|---------+---------+---------+---------+---------+---------+---------|  |---------+---------+---------+---------+---------+---------+---------|
+                                              _______ , _______ , _______ ,    _______ , _______ , _______ \
+                                          //`-----------------------------'  `-----------------------------'
+  ),
+
+  [_QWERTY] = LAYOUT( \
+  //,-------------------------------------------------------------.                     ,---------------------------------------------------------------------------------.
+      KC_ESC         , FR_Q , FR_W , FR_E , FR_R     , FR_T       ,                             FR_Y ,            FR_U ,    FR_I ,   FR_O ,    FR_P ,              KC_ENT ,\
+  //|----------------+------+------+------+----------+------------|                     |------------+-----------------+---------+--------+---------+---------------------|
+      LGUI_T(KC_TAB) , FR_A , FR_S , FR_D , FR_F     , FR_G       ,                             FR_H ,            FR_J ,    FR_K ,   FR_L , FR_SCLN , LT(_SHIFT, FR_QUOT) ,\
+  //|----------------+------+------+------+----------+------------|                     |------------+-----------------+---------+--------+---------+---------------------|
+      KC_LSHIFT      , FR_Z , FR_X , FR_C , FR_V     , FR_B       ,                             FR_N ,            FR_M , FR_COMM , FR_DOT , FR_SLSH ,              FR_EQL ,\
+  //|----------------+------+------+------+----------+------------+--------|  |---------+------------+-----------------+---------+--------+---------+---------------------|
+                                            KC_LCTRL , MO(_LOWER) , KC_SPC ,    KC_BSPC , MO(_RAISE) , LALT_T(FR_RPRN) \
+                                        //`--------------------------------'  `----------------------------------------'
   )
 };
 
 int RGB_current_mode;
-
-void persistent_default_layer_set(uint16_t default_layer) {
-  eeconfig_update_default_layer(default_layer);
-  default_layer_set(default_layer);
-}
-
-// Setting ADJUST layer RGB back to default
-void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
-  if (IS_LAYER_ON(layer1) && IS_LAYER_ON(layer2)) {
-    layer_on(layer3);
-  } else {
-    layer_off(layer3);
-  }
-}
 
 void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
@@ -124,8 +119,35 @@ void matrix_init_user(void) {
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
 #ifdef SSD1306OLED
 
+char layer_state_str[24];
+const char *read_layer_state(void) {
+  switch (biton32(layer_state))
+  {
+  case _COLEMAK:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Colemak");
+    break;
+  case _QWERTY:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Qwerty");
+    break;
+  case _LOWER:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Lower");
+    break;
+  case _RAISE:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Raise");
+    break;
+  case _SHIFT:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Shift");
+    break;
+  case _ADJUST:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Adjust");
+    break;
+  default:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Undef-%ld", layer_state);
+  }
+  return layer_state_str;
+}
+
 // When add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
 const char *read_logo(void);
 void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
@@ -144,7 +166,7 @@ void matrix_render_user(struct CharacterMatrix *matrix) {
   if (is_master) {
     // If you want to change the display of OLED, you need to change here
     matrix_write_ln(matrix, read_layer_state());
-    matrix_write_ln(matrix, read_keylog());
+    //matrix_write_ln(matrix, read_keylog());
     //matrix_write_ln(matrix, read_keylogs());
     //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
     //matrix_write_ln(matrix, read_host_led_state());
@@ -170,62 +192,27 @@ void iota_gfx_task_user(void) {
 #endif//SSD1306OLED
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-#ifdef SSD1306OLED
-    set_keylog(keycode, record);
-#endif
-    // set_timelog();
-  }
+  switch (keycode)
+  {
+  case SWAP_DL:
+    if (record->event.pressed) {
+      if (biton32(default_layer_state) == _COLEMAK) {
+          //set_single_default_layer(_QWERTY);
+      } else {
+          //set_single_default_layer(_COLEMAK);
+      }
+    }
+    return false;
 
-  switch (keycode) {
-    case QWERTY:
-      if (record->event.pressed) {
-        persistent_default_layer_set(1UL<<_QWERTY);
-      }
-      return false;
-    case LOWER:
-      if (record->event.pressed) {
-        layer_on(_LOWER);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_LOWER);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-    case RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_RAISE);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-    case ADJUST:
-        if (record->event.pressed) {
-          layer_on(_ADJUST);
-        } else {
-          layer_off(_ADJUST);
-        }
-        return false;
-    case RGB_MOD:
-      #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          rgblight_mode(RGB_current_mode);
-          rgblight_step();
-          RGB_current_mode = rgblight_config.mode;
-        }
-      #endif
-      return false;
-    case RGBRST:
-      #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          eeconfig_update_rgblight_default();
-          rgblight_enable();
-          RGB_current_mode = rgblight_config.mode;
-        }
-      #endif
-      break;
+  case RGBRST:
+    #ifdef RGBLIGHT_ENABLE
+    if (record->event.pressed) {
+      eeconfig_update_rgblight_default();
+      rgblight_enable();
+      RGB_current_mode = rgblight_config.mode;
+    }
+    #endif
+    break;
   }
   return true;
 }
