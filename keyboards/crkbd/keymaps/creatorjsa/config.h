@@ -28,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
+// Rebind LAPO space cadet to close parenthesis instead of open it
+#define LAPO_KEYS KC_LALT, KC_LSFT, KC_0
+
 #define SSD1306OLED
 
 #define USE_SERIAL_PD2
