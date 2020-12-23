@@ -12,6 +12,7 @@ RGB_MATRIX_ENABLE = WS2812
 EXTRAKEY_ENABLE   = yes
 WPM_ENABLE = yes
 OLED_DRIVER_ENABLE = yes
+TAP_DANCE_ENABLE = yes
 
 # If you want to change the display of OLED, you need to change here
 SRC +=  ./lib/glcdfont.c \
