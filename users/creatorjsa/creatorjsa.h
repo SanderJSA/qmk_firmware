@@ -6,6 +6,7 @@
 
 // Wrapper for _______________XXXXXXXX_______________ in LAYOUT
 #define LAYOUT_WRAPPER(...) LAYOUT(__VA_ARGS__)
+#define LAYOUT_BASTYL_WRAPPER(...) LAYOUT_new(__VA_ARGS__)
 
 // Homerow modifiers
 #define HM_R LALT_T(KC_R)
@@ -22,7 +23,7 @@
 
 #define _______________COLEMAK_DH_L1_______________        KC_Q,    KC_W,    KC_F,    KC_P,    KC_B
 #define _______________COLEMAK_DH_L2_______________        KC_A,    HM_R,    HM_S,    HM_T,    KC_G
-#define _______________COLEMAK_DH_L3_______________        KC_Z,    KC_X,    KC_C,    KC_D,    KC_V
+#define _______________COLEMAK_DH_L3_______________        KC_Z,    HM_X,    KC_C,    KC_D,    KC_V
 
 #define _______________COLEMAK_DH_R1_______________        KC_K,    KC_L,    KC_U,    KC_Y,    KC_SCLN
 #define _______________COLEMAK_DH_R2_______________        KC_M,    HM_N,    HM_E,    HM_I,    KC_O

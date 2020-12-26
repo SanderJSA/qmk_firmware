@@ -1,37 +1,59 @@
 #include QMK_KEYBOARD_H
+#include "creatorjsa.h"
 
 #define _COLEMAK 0
 #define _QWERTY 1
-#define _RAISE 2
+#define _LOWER 3
+#define _RAISE 4
+#define _ADJUST 5
 
 #define SWAP_DL TG(_QWERTY)
 
+enum {
+    TD_LPRN,
+    TD_RPRN,
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_LPRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_LBRC),
+    [TD_RPRN] = ACTION_TAP_DANCE_DOUBLE(KC_RPRN, KC_RBRC),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [_COLEMAK] = LAYOUT_new( \
-   KC_LBRC        , KC_1 , KC_2 , KC_3    , KC_4       , KC_5       ,       KC_6 ,       KC_7 ,     KC_8 ,   KC_9 ,    KC_0 , KC_RBRC ,\
-   KC_ESC         , KC_Q , KC_W , KC_F    , KC_P       , KC_B       ,       KC_K ,       KC_L ,     KC_U ,   KC_Y , KC_SCLN , KC_BSLS ,\
-   LGUI_T(KC_TAB) , KC_A , KC_R , KC_S    , KC_T       , KC_G       ,       KC_M ,       KC_N ,     KC_E ,   KC_I ,    KC_O , KC_QUOT ,\
-   KC_MINUS       , KC_Z , KC_X , KC_C    , KC_D       , KC_V       ,       KC_J ,       KC_H ,  KC_COMM , KC_DOT , KC_SLSH ,  KC_EQL ,\
-                                  KC_LCTL , MO(_RAISE) , KC_LSHIFT  ,  KC_RSHIFT , MO(_RAISE) ,  KC_LALT ,\
-                                            KC_DEL     , KC_SPC     ,    KC_BSPC ,     KC_ENT
+  [_COLEMAK] = LAYOUT_BASTYL_WRAPPER( \
+    XXXXXXX        , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX            ,            XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX , XXXXXXX ,
+    KC_BSLS        , _______________COLEMAK_DH_L1_______________            ,            _______________COLEMAK_DH_R1_______________ , KC_DEL  ,
+    LGUI_T(KC_TAB) , _______________COLEMAK_DH_L2_______________            ,            _______________COLEMAK_DH_R2_______________ , KC_QUOT ,
+    KC_MINS        , _______________COLEMAK_DH_L3_______________            ,            _______________COLEMAK_DH_R3_______________ , KC_EQL  ,
+                                TD(TD_LPRN) , LT(_LOWER, KC_ESC) , KC_SPC   ,  KC_BSPC , LT(_RAISE, KC_ENT) , TD(TD_RPRN) ,
+                                                         XXXXXXX , XXXXXXX  ,  XXXXXXX , XXXXXXX
   ),
 
-  [_QWERTY] = LAYOUT_new( \
-   KC_LBRC        , KC_1 , KC_2 , KC_3    , KC_4       , KC_5       ,       KC_6 ,       KC_7 ,     KC_8 ,   KC_9 ,    KC_0 , KC_RBRC ,\
-   KC_ESC         , KC_Q , KC_W , KC_E    , KC_R       , KC_T       ,       KC_Y ,       KC_U ,     KC_I ,   KC_O ,    KC_P , KC_BSLS ,\
-   LGUI_T(KC_TAB) , KC_A , KC_S , KC_D    , KC_F       , KC_G       ,       KC_H ,       KC_J ,     KC_K ,   KC_L , KC_SCLN , KC_QUOT ,\
-   KC_MINUS       , KC_Z , KC_X , KC_C    , KC_V       , KC_B       ,       KC_N ,       KC_M ,  KC_COMM , KC_DOT , KC_SLSH ,  KC_EQL ,\
-                                  KC_LCTL , MO(_RAISE) , KC_LSHIFT  ,  KC_RSHIFT , MO(_RAISE) ,  KC_LALT ,\
-                                            KC_DEL     , KC_SPC     ,    KC_BSPC ,     KC_ENT
+  [_QWERTY] = LAYOUT_BASTYL_WRAPPER( \
+    XXXXXXX        , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX            ,            XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX , XXXXXXX ,
+    KC_ESC         , _________________QWERTY_L1_________________            ,            _________________QWERTY_R1_________________ , KC_RBRC ,
+    LGUI_T(KC_TAB) , _________________QWERTY_L2_________________            ,            _________________QWERTY_R2_________________ , KC_QUOT ,
+    KC_LSHIFT      , _________________QWERTY_L3_________________            ,            _________________QWERTY_R3_________________ , KC_EQL  ,
+                                    KC_LCPO , LT(_LOWER, KC_ESC) , KC_SPC   ,  KC_BSPC , LT(_RAISE, KC_ENT) , KC_LAPO ,
+                                                         XXXXXXX , XXXXXXX  ,  XXXXXXX , XXXXXXX
   ),
 
-  [_RAISE] = LAYOUT_new( \
-   KC_F11     , KC_F1      , KC_F2      , KC_F3      , KC_F4      , KC_F5       ,    KC_F6 ,   KC_F7 ,   KC_F8 ,   KC_F9 ,   KC_F10 ,  KC_F12 ,\
-   KC_GRV     , KC_1       , KC_2       , KC_3       , KC_4       , KC_5        ,     KC_6 ,    KC_7 ,    KC_8 ,    KC_9 ,     KC_0 , KC_MUTE ,\
-   _______    , KC_EXLM    , KC_AT      , KC_HASH    , KC_DLR     , KC_PERC     ,  KC_CIRC , KC_AMPR , KC_ASTR , KC_LPRN ,  KC_RPRN , KC_VOLU ,\
-   RALT(KC_U) , RALT(KC_A) , RALT(KC_E) , RALT(KC_D) , RALT(KC_R) , RALT(KC_C)  ,  KC_PSCR , KC_LEFT , KC_DOWN ,   KC_UP , KC_RIGHT , KC_VOLD ,\
-                                             SWAP_DL , _______    , _______     ,    RESET , _______ , KC_RALT ,\
-                                                       KC_LCBR    , KC_LBRC     ,  KC_RBRC , KC_RCBR
+  [_LOWER] = LAYOUT_BASTYL_WRAPPER( \
+    XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX            ,            XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX , XXXXXXX ,
+    _______ , _________________LOWER_L1__________________            ,            _________________LOWER_R1__________________ , _______ ,
+    _______ , _________________LOWER_L2__________________            ,            _________________LOWER_R2__________________ , _______ ,
+    _______ , _________________LOWER_L3__________________            ,            _________________LOWER_R3__________________ , _______ ,
+                                        _______ , _______ , _______  ,  _______ , SWAP_DL , _______ ,
+                                                  _______ , _______  ,  _______ , _______
+  ),
+
+  [_RAISE] = LAYOUT_BASTYL_WRAPPER( \
+    RESET   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX            ,            XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX , XXXXXXX ,
+    _______ , _________________RAISE_L1__________________            ,            _________________RAISE_R1__________________ , _______ ,
+    _______ , _________________RAISE_L2__________________            ,            _________________RAISE_R2__________________ , _______ ,
+    _______ , _________________RAISE_L3__________________            ,            _________________RAISE_R3__________________ , _______ ,
+                                        _______ , SWAP_DL , _______  ,  _______ , _______ , _______ ,
+                                                  _______ , _______  ,  _______ , _______
   ),
 };
